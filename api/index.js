@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const console = require('./modules/console');
 
-require('dotenv').config();
+require('dotenv').config({quiet: true});
 
 const app = express();
 const PORT = process.env.PORT || 8080;
