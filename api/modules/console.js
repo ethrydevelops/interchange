@@ -16,19 +16,19 @@ function getFormattedConsoleTime() {
 }
 
 module.exports = {
-    log: (message) => {
-        console.log(colors.blue("[LOG]"), message, colors.gray("(" + getFormattedConsoleTime() + ")"));
+    log: (...message) => {
+        console.log(colors.blue("[LOG]"), ...message, colors.gray("(" + getFormattedConsoleTime() + ")"));
     },
-    error: (message) => {
-        console.log(colors.red("[ERROR]"), message, colors.gray("(" + getFormattedConsoleTime() + ")"));
+    error: (...message) => {
+        console.log(colors.red("[ERROR]"), ...message, colors.gray("(" + getFormattedConsoleTime() + ")"));
     },
-    warn: (message) => {
-        console.log(colors.yellow("[WARN]"), message, colors.gray("(" + getFormattedConsoleTime() + ")"));
+    warn: (...message) => {
+        console.log(colors.yellow("[WARN]"), ...message, colors.gray("(" + getFormattedConsoleTime() + ")"));
     },
-    info: (message) => {
-        console.log(colors.cyan("[INFO]"), message, colors.gray("(" + getFormattedConsoleTime() + ")"));
+    info: (...message) => {
+        console.log(colors.cyan("[INFO]"), ...message, colors.gray("(" + getFormattedConsoleTime() + ")"));
     },
-    success: (message) => {
-        console.log(colors.green("[SUCCESS]"), message, colors.gray("(" + getFormattedConsoleTime() + ")"));
+    success: (...message) => {
+        console.log(colors.green("[SUCCESS]"), ...message, colors.gray("(" + getFormattedConsoleTime() + ")"));
     },
 };
