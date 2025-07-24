@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const colors = require('colors');
 const console = require('./modules/console');
 
 require('dotenv').config();
@@ -31,9 +32,9 @@ function loadRoutes(dir) {
             const route = require(fullPath);
             try {
                 app.use(route);
-                console.log("Loaded route(s) from " + relativePath);
+                console.log(colors.green("✓"), "Loaded route(s) from " + relativePath);
             } catch (error) {
-                console.error("Failed to load route(s) from " + relativePath + ": " + error);
+                console.error(colors.red("✗"), "Failed to load route(s) from " + relativePath + ": " + error);
             }
         }
     });
@@ -45,5 +46,5 @@ loadRoutes(path.join(__dirname, "routes"));
 // TODO: HTTPS
 
 app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}/`);
+    console.log(colors.green("♥"), `Server is running at http://localhost:${PORT}/`);
 });
