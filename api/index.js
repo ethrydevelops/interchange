@@ -5,7 +5,7 @@ const fs = require('fs');
 const colors = require('colors');
 const console = require('./modules/console');
 
-require('dotenv').config();
+require('dotenv').config({quiet: true});
 
 const app = express();
 const PORT = process.env.PORT || 8080;
