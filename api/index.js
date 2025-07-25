@@ -39,7 +39,6 @@ function loadRoutes(dir) {
     });
 }
 
-// load required routes before starting:
 loadRoutes(path.join(__dirname, "routes"));
 
 // TODO: HTTPS
