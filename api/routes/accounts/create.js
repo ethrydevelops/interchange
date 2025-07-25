@@ -1,14 +1,53 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
 router.post("/accounts/", async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, pbkdf2, encryption } = req.body;
 
-    if (!username || !password) {
-        return res.status(400).json({ error: "Username and password are required." });
+    /*
+        in case i need it later
+        * required field
+
+        username*
+        password* (pbkdf2 performed on client-side)
+        pbkdf2: {
+            salt* (pbkdf2 salt used for `password` field)
+            iterations* (iterations for both uses of pbkdf2)
+        }
+        encryption: {
+            pgp_private* (pgp private key, encrypted with original password pre-pbkdf2 client-side)
+            pgp_public*
+            pbkdf2_salt* (salt used to encrypt the final encryption key, derived from pbkdf2 on the client-side)
+        }
+
+        all encrypted fields are performed E2EE (on the client-side + are never sent)
+    */
+
+    // validate inputs
+
+    if (!username || !password || !pbkdf2 || !encryption) return res.status(400).json({ error: "username, password, pbkdf2 are required." });
+    if (!pbkdf2 || !pbkdf2.salt || !pbkdf2.iterations) return res.status(400).json({ error: "pbkdf2.salt, pbkdf2.iterations are required." });
+
+    if (!encryption || !encryption.pgp_private || !encryption.pgp_public || !encryption.pbkdf2_salt) return res.status(400).json({ error: "encryption.pgp_private, encryption.pgp_public, and encryption.pbkdf2_salt are required." }); // (pbkdf2_salt is used as an aes key to encrypt the final encryption key)
+
+    if (username.length < 3 || username.length > 32) {
+        return res.status(400).json({ error: "Username must be between 3 and 32 characters." });
     }
 
-    
+    // TODO: pgp_private is obviously encrypted before being sent to the server
+    // note to self - cannot validate password as its derived from pbkdf2 on the client-side
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    const accountId = uuidv4();
+
+    // TODO: insert into db
+
+    res.status(201).json({
+        message: "Account created successfully.",
+        accountId, passwordHash, pbkdf2, encryption
+    });
 });
 
 module.exports = router;
