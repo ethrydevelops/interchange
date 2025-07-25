@@ -9,13 +9,11 @@ exports.up = function(knex) {
 
         table.text('password').notNullable(); // <-- hashed password, derived from pbkdf2 on the client-side
 
-        /* pbkdf2 - for password hashing */
-        table.binary('pbkdf2_salt').notNullable();
+        /* pbkdf2 */
         table.integer('pbkdf2_iterations').notNullable();
 
-        /* enc_pbkdf2 - for encryption of openpgp key */
-        table.binary('enc_pbkdf2_salt').notNullable();
-        table.integer('enc_pbkdf2_iterations').notNullable();
+        table.binary('pbkdf2_salt').notNullable(); // <-- salt for pbkdf2 FOR AUTH
+        table.binary('enc_pbkdf2_salt').notNullable(); // <-- salt for pbkdf2 FOR ENCRYPTION of final encryption key
        
         /* openpgp / final encryption */
         table.text('encrypted_openpgp_private_key').notNullable();
