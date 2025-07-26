@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
+const knex = require("../../modules/database.js");
 const router = express.Router();
 
 router.post("/accounts/", async (req, res) => {
@@ -43,10 +44,25 @@ router.post("/accounts/", async (req, res) => {
     const accountId = uuidv4();
 
     // TODO: insert into db
+    try {
+        await knex('accounts').insert({
+            id: accountId,
+            username,
+            password: passwordHash,
+            pbkdf2_salt: Buffer.from(pbkdf2.salt, 'base64'),
+            pbkdf2_iterations: pbkdf2.iterations,
+            enc_pbkdf2_salt: Buffer.from(encryption.pbkdf2_salt, 'base64'),
+            encrypted_openpgp_private_key: encryption.pgp_private,
+            openpgp_public_key: encryption.pgp_public
+        });
+    } catch (error) {
+        console.error("Error inserting account:", error);
+        return res.status(500).json({ error: "Failed to create account." });
+    }
 
     res.status(201).json({
         message: "Account created successfully.",
-        accountId, passwordHash, pbkdf2, encryption
+        uuid: accountId
     });
 });
 
