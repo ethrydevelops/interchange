@@ -2,31 +2,11 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const knex = require("../../modules/database.js");
+const crypto = require('crypto');
 const router = express.Router();
 
 router.post("/accounts/", async (req, res) => {
     const { username, password, pbkdf2, encryption } = req.body;
-
-    /*
-        in case i need it later
-        * required field
-
-        username*
-        password* (pbkdf2 performed on client-side)
-        pbkdf2: {
-            salt* (pbkdf2 salt used for `password` field)
-            iterations* (iterations for both uses of pbkdf2)
-        }
-        encryption: {
-            pgp_private* (pgp private key, encrypted with original password pre-pbkdf2 client-side)
-            pgp_public*
-            pbkdf2_salt* (salt used to encrypt the final encryption key, derived from pbkdf2 on the client-side)
-        }
-
-        all encrypted fields are performed E2EE (on the client-side + are never sent)
-    */
-
-    // validate inputs
 
     if (!username || !password || !pbkdf2 || !encryption) return res.status(400).json({ error: "username, password, pbkdf2 are required." });
     if (!pbkdf2 || !pbkdf2.salt || !pbkdf2.iterations) return res.status(400).json({ error: "pbkdf2.salt, pbkdf2.iterations are required." });
@@ -42,8 +22,7 @@ router.post("/accounts/", async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 12);
     const accountId = uuidv4();
-
-    // TODO: insert into db
+    
     try {
         await knex('accounts').insert({
             id: accountId,
