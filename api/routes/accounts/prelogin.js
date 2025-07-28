@@ -40,7 +40,7 @@ router.post("/accounts/prelogin", async (req, res) => {
 
     res.json({
         kdf: accountExists ? 1 : 0,
-        data: accountInfoObject
+        ...accountInfoObject
     })
 });
 
