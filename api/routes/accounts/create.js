@@ -1,6 +1,5 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
 const knex = require("../../modules/database.js");
 const crypto = require('crypto');
 const router = express.Router();
@@ -21,7 +20,7 @@ router.post("/accounts/", async (req, res) => {
     // note to self - cannot validate password as its derived from pbkdf2 on the client-side
 
     const passwordHash = await bcrypt.hash(password, 12);
-    const accountId = uuidv4();
+    const accountId = crypto.randomUUID();
     
     try {
         await knex('accounts').insert({
