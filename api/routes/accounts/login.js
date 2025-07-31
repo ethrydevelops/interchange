@@ -44,6 +44,13 @@ router.post("/accounts/login", async (req, res) => {
             keys: {
                 public: account.openpgp_public_key,
                 private: account.encrypted_openpgp_private_key,
+            },
+
+            encryption: {
+                pbkdf2: {
+                    iterations: accountInfo.pbkdf2_iterations,
+                    salt: accountInfo.enc_pbkdf2_salt != null ? accountInfo.enc_pbkdf2_salt.toString('base64') : null
+                }
             }
         });
     } catch (error) {

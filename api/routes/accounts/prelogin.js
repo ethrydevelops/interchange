@@ -30,12 +30,12 @@ router.post("/accounts/prelogin", async (req, res) => {
                 salt: accountInfo.pbkdf2_salt != null ? accountInfo.pbkdf2_salt.toString('base64') : null
             }
         },
-        encryption: {
+        /*encryption: {
             pbkdf2: {
                 iterations: accountInfo.pbkdf2_iterations,
                 salt: accountInfo.enc_pbkdf2_salt != null ? accountInfo.enc_pbkdf2_salt.toString('base64') : null
             }
-        }
+        }*/
     }
 
     res.json({
