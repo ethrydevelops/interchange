@@ -48,8 +48,8 @@ router.post("/accounts/login", async (req, res) => {
 
             encryption: {
                 pbkdf2: {
-                    iterations: accountInfo.pbkdf2_iterations,
-                    salt: accountInfo.enc_pbkdf2_salt != null ? accountInfo.enc_pbkdf2_salt.toString('base64') : null
+                    iterations: account.pbkdf2_iterations,
+                    salt: account.enc_pbkdf2_salt != null ? account.enc_pbkdf2_salt.toString('base64') : null
                 }
             }
         });
