@@ -14,7 +14,7 @@ router.get("/channels/", sessionMiddleware, async (req, res) => {
             })
             .orderBy('created_at', 'desc');
 
-        // TODO: also add friends list if no messages sent
+        // TODO: also add friends list, gcs if no messages sent
 
         const contacts = [
             ...new Set(
@@ -26,11 +26,19 @@ router.get("/channels/", sessionMiddleware, async (req, res) => {
             )
         ];
 
+        if (contacts.length === 0) {
+            return res.json({ channels: [] });
+        }
+
         const contactUsersPromise = knex('accounts')
             .select('id', 'username', 'openpgp_public_key')
             .whereIn('id', contacts);
 
         const contactUsers = await contactUsersPromise;
+
+        for (const user of contactUsers) {
+            user.type = "person";
+        }
 
         res.json({ channels: contactUsers });
     } catch (error) {
