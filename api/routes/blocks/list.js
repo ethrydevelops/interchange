@@ -10,8 +10,7 @@ router.get("/blocks", sessionMiddleware, async (req, res) => {
             .join('accounts', 'blocks.blocked_account_id', 'accounts.id')
             .select(
                 'accounts.id',
-                'accounts.username',
-                'accounts.openpgp_public_key as public_key'
+                'accounts.username'
             )
             .where('blocks.account_id', req.session.account_id);
 
